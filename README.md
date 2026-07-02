@@ -1,5 +1,8 @@
 # RainCheck 🌧
 
+**Live: https://preethirtera.github.io/raincheck/** — on your phone, open it
+in Safari/Chrome and use "Add to Home Screen" to install.
+
 An app for overcommitters. It lives in the gap between **being asked** and
 **saying yes** — showing you what your week already costs before you spend
 more of it, and helping you decline gracefully when the budget is blown.
