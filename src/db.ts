@@ -12,8 +12,20 @@ db.version(1).stores({
   settings: 'id',
 })
 
+db.version(2)
+  .stores({
+    asks: '++id, kind, status, start, decideBy, createdAt',
+    settings: 'id',
+  })
+  .upgrade((tx) =>
+    tx.table('asks').toCollection().modify((a) => {
+      a.kind = a.kind ?? 'ask'
+    }),
+  )
+
 export async function getSettings(): Promise<Settings> {
-  return (await db.settings.get('app')) ?? DEFAULT_SETTINGS
+  const stored = await db.settings.get('app')
+  return { ...DEFAULT_SETTINGS, ...stored }
 }
 
 export async function saveSettings(patch: Partial<Settings>): Promise<void> {

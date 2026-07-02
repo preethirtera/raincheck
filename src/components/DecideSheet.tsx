@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { db } from '../db'
-import { findConflict, isThisWeek, percentSpent, spentHours } from '../lib/budget'
+import { consecutiveDays, findConflict, isThisWeek, percentSpent, spentHours } from '../lib/budget'
 import { DEFLECTIONS, DECLINES } from '../lib/replies'
 import { ensurePermission } from '../lib/notify'
 import { fmtWhen, fmtHours, fmtUntil, SIZE_LABELS } from '../lib/format'
@@ -28,6 +28,7 @@ export function DecideSheet({ ask, asks, settings, onClose }: Props) {
   const now = new Date()
   const locked = ask.yesLockedUntil !== null && new Date(ask.yesLockedUntil) > now
   const conflict = findConflict(ask, asks)
+  const streak = ask.status === 'pending' || ask.status === 'deferred' ? consecutiveDays(ask, asks) : 0
   const current = percentSpent(asks, settings.weeklyBudgetHours, now)
   const projected = isThisWeek(ask.start, now)
     ? Math.round(((spentHours(asks, now) + ask.durationHours) / settings.weeklyBudgetHours) * 100)
@@ -91,7 +92,13 @@ export function DecideSheet({ ask, asks, settings, onClose }: Props) {
             </div>
             {conflict && (
               <div className="conflict" role="alert">
-                ⚠ You already have <strong>{conflict.title}</strong> at that time ({fmtWhen(conflict.start)})
+                ⚠ You already have <strong>{conflict.kind === 'alone' ? 'plans (alone time)' : conflict.title}</strong> at
+                that time ({fmtWhen(conflict.start)})
+              </div>
+            )}
+            {streak >= 3 && (
+              <div className="conflict">
+                ⚠ Saying yes makes it <strong>{streak} days in a row</strong> with plans
               </div>
             )}
             {locked && (
@@ -139,9 +146,18 @@ export function DecideSheet({ ask, asks, settings, onClose }: Props) {
 
         {!copied && pane === 'decline' && (
           <div className="sheet-actions">
-            <p className="pane-hint">Pick a no — it copies, you paste, the app takes the blame:</p>
-            {DECLINES[settings.tone].map((msg) => (
+            <p className="pane-hint">Pick a no. It copies, you paste, the app takes the blame:</p>
+            {settings.customDeclines.map((msg) => (
               <button key={msg} className="btn btn-msg" type="button" onClick={() => decline(msg)}>
+                <span className="msg-badge msg-badge-yours">yours</span>
+                {msg}
+              </button>
+            ))}
+            {DECLINES[settings.tone].map((msg, i) => (
+              <button key={msg} className="btn btn-msg" type="button" onClick={() => decline(msg)}>
+                {i === 0 && settings.customDeclines.length === 0 && (
+                  <span className="msg-badge">suggested</span>
+                )}
                 {msg}
               </button>
             ))}

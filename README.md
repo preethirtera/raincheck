@@ -31,7 +31,7 @@ npm run dev
 | --- | --- | --- |
 | 0 | Identity, design tokens, installable PWA shell | ✅ |
 | 1 | MVP: quick-add asks with auto time parsing, yes-budget meter, sleep-on-it timer, 24-hour rule, decline screen | ✅ |
-| 2 | Own calendar: week view, buffer blocks, overload detection, ICS in/out | |
+| 2 | Own calendar: week view, alone-time blocks, overload detection, ICS in/out, replies in your own words | ✅ |
 | 3 | Connected intake & auto-scheduling: opt-in Slack/Teams/Gmail connectors, share-sheet parse for iMessage/WhatsApp, conflict-aware reminders, web push | |
 | 4 | Saying-no toolkit: decline composer, reclaimed-hours stats, reflection | |
 | 5 | Optional E2E-encrypted sync, multi-device, shareable raincheck links | |

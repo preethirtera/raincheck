@@ -7,12 +7,15 @@ import { fmtWhen, fmtHours, fmtUntil } from './lib/format'
 import { AddAsk } from './components/AddAsk'
 import { DecideSheet } from './components/DecideSheet'
 import { SettingsSheet } from './components/SettingsSheet'
+import { WeekView } from './components/WeekView'
 import { DEFAULT_SETTINGS, type Ask } from './types'
 import './App.css'
 
 function App() {
   const asks = useLiveQuery(() => db.asks.toArray(), [], [] as Ask[])
-  const settings = useLiveQuery(() => db.settings.get('app'), []) ?? DEFAULT_SETTINGS
+  const storedSettings = useLiveQuery(() => db.settings.get('app'), [])
+  const settings = { ...DEFAULT_SETTINGS, ...storedSettings }
+  const [view, setView] = useState<'inbox' | 'week'>('inbox')
   const [deciding, setDeciding] = useState<number | null>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [, forceTick] = useState(0)
@@ -73,9 +76,28 @@ function App() {
         </p>
       </section>
 
-      <AddAsk settings={settings} />
+      <nav className="tabs" aria-label="View">
+        <button
+          className={`tab ${view === 'inbox' ? 'tab-active' : ''}`}
+          type="button"
+          onClick={() => setView('inbox')}
+        >
+          Inbox{inbox.length > 0 && ` · ${inbox.length}`}
+        </button>
+        <button
+          className={`tab ${view === 'week' ? 'tab-active' : ''}`}
+          type="button"
+          onClick={() => setView('week')}
+        >
+          Week
+        </button>
+      </nav>
 
-      {inbox.length > 0 && (
+      {view === 'week' && <WeekView asks={asks} onOpen={setDeciding} />}
+
+      {view === 'inbox' && <AddAsk settings={settings} />}
+
+      {view === 'inbox' && inbox.length > 0 && (
         <section className="list" aria-label="Waiting on you">
           <h2 className="list-title">Waiting on you</h2>
           {inbox.map((ask) => {
@@ -104,7 +126,7 @@ function App() {
         </section>
       )}
 
-      {committed.length > 0 && (
+      {view === 'inbox' && committed.length > 0 && (
         <section className="list" aria-label="Committed">
           <h2 className="list-title">Committed</h2>
           {committed.map((ask) => (
@@ -122,8 +144,8 @@ function App() {
         </section>
       )}
 
-      {inbox.length === 0 && committed.length === 0 && (
-        <p className="empty">Nothing waiting on you. When someone asks, paste it above — the app takes it from there.</p>
+      {view === 'inbox' && inbox.length === 0 && committed.length === 0 && (
+        <p className="empty">Nothing waiting on you. When someone asks, paste it above and the app takes it from there.</p>
       )}
 
       <footer className="phase-note">

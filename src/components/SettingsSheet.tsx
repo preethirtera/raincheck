@@ -1,9 +1,37 @@
 import { useRef } from 'react'
-import { saveSettings, exportJSON, importJSON } from '../db'
+import { db, saveSettings, exportJSON, importJSON } from '../db'
+import { parseICS } from '../lib/ics'
 import type { Settings, Tone } from '../types'
 
 export function SettingsSheet({ settings, onClose }: { settings: Settings; onClose: () => void }) {
   const fileRef = useRef<HTMLInputElement>(null)
+  const icsRef = useRef<HTMLInputElement>(null)
+
+  async function onImportICS(file: File) {
+    const events = parseICS(await file.text())
+    if (events.length === 0) {
+      alert('No events found in that file.')
+      return
+    }
+    const now = new Date().toISOString()
+    await db.asks.bulkAdd(
+      events.map((e) => ({
+        kind: 'ask' as const,
+        rawText: e.title,
+        title: e.title,
+        who: null,
+        start: e.start.toISOString(),
+        durationHours: e.durationHours,
+        size: e.durationHours >= 5 ? ('fullday' as const) : ('evening' as const),
+        status: 'pending' as const,
+        createdAt: now,
+        decideBy: null,
+        yesLockedUntil: null,
+        decidedAt: null,
+      })),
+    )
+    alert(`Added ${events.length} invite${events.length > 1 ? 's' : ''} to your inbox. They still need your yes.`)
+  }
 
   async function download() {
     const blob = new Blob([await exportJSON()], { type: 'application/json' })
@@ -69,6 +97,24 @@ export function SettingsSheet({ settings, onClose }: { settings: Settings; onClo
             </select>
           </label>
 
+          <label className="setting setting-wide">
+            <span>Your own declines, in your words (one per line, shown first)</span>
+            <textarea
+              className="add-input"
+              rows={3}
+              placeholder={'sorry can’t do that day!! next week?\nnooo I have a thing that night 😭'}
+              defaultValue={settings.customDeclines.join('\n')}
+              onChange={(e) =>
+                saveSettings({
+                  customDeclines: e.target.value
+                    .split('\n')
+                    .map((s) => s.trim())
+                    .filter(Boolean),
+                })
+              }
+            />
+          </label>
+
           <label className="setting">
             <span>Quiet hours</span>
             <span className="setting-row">
@@ -94,6 +140,16 @@ export function SettingsSheet({ settings, onClose }: { settings: Settings; onClo
         </div>
 
         <div className="sheet-actions">
+          <button className="btn" type="button" onClick={() => icsRef.current?.click()}>
+            Import calendar invites (.ics)
+          </button>
+          <input
+            ref={icsRef}
+            type="file"
+            accept=".ics,text/calendar"
+            hidden
+            onChange={(e) => e.target.files?.[0] && onImportICS(e.target.files[0])}
+          />
           <button className="btn" type="button" onClick={download}>
             Export backup (JSON)
           </button>

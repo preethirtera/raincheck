@@ -33,6 +33,26 @@ export function percentSpent(asks: Ask[], budgetHours: number, now: Date = new D
   return Math.round((spentHours(asks, now) / budgetHours) * 100)
 }
 
+/** how many consecutive days with commitments this ask would create around its date */
+export function consecutiveDays(ask: Ask, asks: Ask[]): number {
+  if (!ask.start) return 0
+  const busy = new Set<string>()
+  for (const a of asks) {
+    if (a.status === 'committed' && a.start) busy.add(new Date(a.start).toDateString())
+  }
+  busy.add(new Date(ask.start).toDateString())
+  let count = 1
+  for (const dir of [-1, 1]) {
+    const d = new Date(ask.start)
+    for (;;) {
+      d.setDate(d.getDate() + dir)
+      if (!busy.has(d.toDateString())) break
+      count++
+    }
+  }
+  return count
+}
+
 /** find an existing commitment that overlaps the given ask, if any */
 export function findConflict(ask: Ask, asks: Ask[]): Ask | null {
   if (!ask.start) return null

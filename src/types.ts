@@ -2,8 +2,12 @@ export type AskSize = 'small' | 'evening' | 'fullday' | 'multiday'
 
 export type AskStatus = 'pending' | 'deferred' | 'committed' | 'declined'
 
+export type AskKind = 'ask' | 'alone'
+
 export interface Ask {
   id?: number
+  /** 'alone' = protected alone time, treated exactly like a real plan */
+  kind: AskKind
   rawText: string
   title: string
   who: string | null
@@ -30,6 +34,8 @@ export interface Settings {
   coolingOffHours: number
   quietStartHour: number
   quietEndHour: number
+  /** declines written in the user's own words; shown first when saying no */
+  customDeclines: string[]
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -39,4 +45,5 @@ export const DEFAULT_SETTINGS: Settings = {
   coolingOffHours: 24,
   quietStartHour: 22,
   quietEndHour: 8,
+  customDeclines: [],
 }
