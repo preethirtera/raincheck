@@ -148,6 +148,8 @@ function App() {
         <p className="empty">Nothing waiting on you. When someone asks, paste it above and the app takes it from there.</p>
       )}
 
+      {view === 'inbox' && <WeekView asks={asks} onOpen={setDeciding} compact />}
+
       <footer className="phase-note">
         <span className="phase-chip">PHASE 1</span> local-first — everything stays on this device
       </footer>

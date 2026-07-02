@@ -11,9 +11,11 @@ const TRACK_HOURS = 16 // through midnight
 interface Props {
   asks: Ask[]
   onOpen: (id: number) => void
+  /** compact = read-only glance for the inbox tab */
+  compact?: boolean
 }
 
-export function WeekView({ asks, onOpen }: Props) {
+export function WeekView({ asks, onOpen, compact }: Props) {
   const [adding, setAdding] = useState(false)
   const [aloneDay, setAloneDay] = useState(() => new Date().toISOString().slice(0, 10))
   const [aloneHour, setAloneHour] = useState(19)
@@ -53,9 +55,11 @@ export function WeekView({ asks, onOpen }: Props) {
     <section className="week" aria-label="This week">
       <div className="week-head">
         <h2 className="list-title">This week</h2>
-        <button className="btn-mini" type="button" onClick={() => downloadICS(committed)}>
-          ⤓ add to calendar
-        </button>
+        {!compact && (
+          <button className="btn-mini" type="button" onClick={() => downloadICS(committed)}>
+            ⤓ add to calendar
+          </button>
+        )}
       </div>
 
       {days.map((day) => {
@@ -94,7 +98,7 @@ export function WeekView({ asks, onOpen }: Props) {
         )
       })}
 
-      {!adding ? (
+      {compact ? null : !adding ? (
         <button className="btn-mini btn-alone" type="button" onClick={() => setAdding(true)}>
           + protect alone time
         </button>
@@ -124,7 +128,9 @@ export function WeekView({ asks, onOpen }: Props) {
           </button>
         </div>
       )}
-      <p className="week-note">Alone time counts like any plan. If someone asks, you already have plans.</p>
+      {!compact && (
+        <p className="week-note">Alone time counts like any plan. If someone asks, you already have plans.</p>
+      )}
     </section>
   )
 }
