@@ -1,0 +1,42 @@
+export type AskSize = 'small' | 'evening' | 'fullday' | 'multiday'
+
+export type AskStatus = 'pending' | 'deferred' | 'committed' | 'declined'
+
+export interface Ask {
+  id?: number
+  rawText: string
+  title: string
+  who: string | null
+  /** ISO datetime of when the plan starts; null if no time was found */
+  start: string | null
+  durationHours: number
+  size: AskSize
+  status: AskStatus
+  createdAt: string
+  /** when a deferred ask should nudge you to decide */
+  decideBy: string | null
+  /** 24-hour rule: Yes is disabled until this passes (big asks only) */
+  yesLockedUntil: string | null
+  decidedAt: string | null
+}
+
+export type Tone = 'gentle' | 'firm' | 'snarky'
+
+export interface Settings {
+  id: 'app'
+  weeklyBudgetHours: number
+  tone: Tone
+  /** cooling-off window for the 24-hour rule, in hours */
+  coolingOffHours: number
+  quietStartHour: number
+  quietEndHour: number
+}
+
+export const DEFAULT_SETTINGS: Settings = {
+  id: 'app',
+  weeklyBudgetHours: 10,
+  tone: 'gentle',
+  coolingOffHours: 24,
+  quietStartHour: 22,
+  quietEndHour: 8,
+}
