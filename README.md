@@ -27,9 +27,9 @@ npm run dev
 | Phase | Scope | Status |
 | --- | --- | --- |
 | 0 | Identity, design tokens, installable PWA shell | ✅ this commit |
-| 1 | MVP: quick-add asks, yes-budget meter, sleep-on-it timer, decline screen | up next |
+| 1 | MVP: quick-add asks with auto time parsing, yes-budget meter, sleep-on-it timer, decline screen | up next |
 | 2 | Own calendar: week view, buffer blocks, overload detection, ICS in/out | |
-| 3 | Low-permission intake: share sheet, email forwarding, web push | |
+| 3 | Connected intake & auto-scheduling: opt-in Slack/Teams/Gmail connectors, share-sheet parse for iMessage/WhatsApp, conflict-aware reminders, web push | |
 | 4 | Saying-no toolkit: decline composer, reclaimed-hours stats, reflection | |
 | 5 | Optional E2E-encrypted sync, multi-device, shareable raincheck links | |
 
