@@ -2,10 +2,10 @@
   min-height: 100dvh;
   max-width: 520px;
   margin: 0 auto;
-  padding: var(--space-4) var(--space-6) var(--space-2);
+  padding: var(--space-8) var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-6);
 }
 
 /* ---------- masthead ---------- */
@@ -58,7 +58,7 @@
   background: linear-gradient(180deg, var(--ink-1), #0b0412);
   border: 1px solid #2d1141;
   border-radius: var(--radius-lg);
-  padding: var(--space-3) var(--space-6);
+  padding: var(--space-4) var(--space-6);
   display: flex;
   align-items: center;
   gap: var(--space-6);
@@ -135,7 +135,6 @@
   border-radius: var(--radius-md);
   color: var(--text);
   font: inherit;
-  height: 52px;
   padding: var(--space-3) var(--space-4);
   resize: none;
 }
@@ -226,7 +225,7 @@
 .week {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .week-head {
@@ -288,7 +287,7 @@
 
 .day-track {
   position: relative;
-  height: 24px;
+  height: 30px;
   background:
     repeating-linear-gradient(
       90deg,
@@ -466,7 +465,7 @@
   color: var(--faint);
   font-size: var(--text-sm);
   text-align: center;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-6) var(--space-4);
   margin: 0;
 }
 
@@ -721,56 +720,8 @@
 .phase-note {
   margin-top: auto;
   color: var(--faint);
-  font-size: var(--text-xs);
-  padding-top: var(--space-2);
-}
-
-/* short screens: compress vertically so everything stays in view */
-@media (max-height: 1050px) {
-  .shell {
-    gap: var(--space-3);
-    padding-top: var(--space-2);
-  }
-  .wordmark {
-    font-size: 1.8rem;
-  }
-  .tagline {
-    display: none;
-  }
-  .ring {
-    width: 64px;
-    height: 64px;
-  }
-  .ring::before {
-    inset: 6px;
-  }
-  .ring-num {
-    font-size: 1.05rem;
-  }
-  .day-track {
-    height: 20px;
-  }
-  .block {
-    font-size: 9px;
-    top: 2px;
-    bottom: 2px;
-  }
-  .add-input {
-    height: 44px;
-  }
-  .ask-card {
-    padding: var(--space-2) var(--space-3);
-  }
-  .empty {
-    font-size: var(--text-xs);
-  }
-  .empty-icon {
-    font-size: 1.2rem;
-    margin-bottom: 0;
-  }
-  .phase-note {
-    display: none;
-  }
+  font-size: var(--text-sm);
+  padding-top: var(--space-4);
 }
 
 /* ---------- single-screen phone layout ---------- */
