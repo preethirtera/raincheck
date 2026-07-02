@@ -537,6 +537,20 @@
   color: var(--cyan);
 }
 
+.status-flaked {
+  color: var(--amber);
+}
+
+.ask-flaked .ask-title {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.btn-flake {
+  border-color: rgba(255, 235, 59, 0.4);
+  color: var(--amber);
+}
+
 .empty {
   color: var(--faint);
   font-size: var(--text-sm);

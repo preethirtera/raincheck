@@ -12,6 +12,15 @@ export const DEFLECTIONS: Record<Tone, string> = {
     'consulting my calendar, it makes all my decisions now. will report back',
 }
 
+/** shown when someone tries to back out of a commitment */
+export const FLAKE_WARNINGS: Record<Tone, string> = {
+  gentle:
+    "They're counting on you. If you flake, the hours stay spent anyway. Your week already paid for this.",
+  firm: 'You committed. The hours stay on your budget either way. Flake anyway?',
+  snarky:
+    'Bailing after saying yes? Bold. The budget keeps the hours and your reputation keeps the dent.',
+}
+
 export const DECLINES: Record<Tone, string[]> = {
   gentle: [
     "That sounds so fun! But this week is already packed for me. Can we find another time soon? 💜",

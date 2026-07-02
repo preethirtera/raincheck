@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { db } from '../db'
 import { consecutiveDays, findConflict, isThisWeek, percentSpent, spentHours } from '../lib/budget'
-import { DEFLECTIONS, DECLINES } from '../lib/replies'
+import { DEFLECTIONS, DECLINES, FLAKE_WARNINGS } from '../lib/replies'
 import { ensurePermission } from '../lib/notify'
 import { syncReminders } from '../lib/push'
 import { fmtWhen, fmtHours, fmtUntil, SIZE_LABELS } from '../lib/format'
@@ -23,7 +23,7 @@ async function copy(text: string) {
 }
 
 export function DecideSheet({ ask, asks, settings, onClose }: Props) {
-  const [pane, setPane] = useState<'decide' | 'defer' | 'decline'>('decide')
+  const [pane, setPane] = useState<'decide' | 'defer' | 'decline' | 'flake'>('decide')
   const [copied, setCopied] = useState<string | null>(null)
 
   const now = new Date()
@@ -65,6 +65,14 @@ export function DecideSheet({ ask, asks, settings, onClose }: Props) {
     onClose()
   }
 
+  async function flake() {
+    await db.asks.update(ask.id!, { status: 'flaked', decidedAt: now.toISOString() })
+    window.dispatchEvent(new CustomEvent('raincheck:strike'))
+    onClose()
+  }
+
+  const committed = ask.status === 'committed'
+
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <div className="sheet" role="dialog" aria-label={`Decide: ${ask.title}`} onClick={(e) => e.stopPropagation()}>
@@ -86,7 +94,33 @@ export function DecideSheet({ ask, asks, settings, onClose }: Props) {
           </div>
         )}
 
-        {!copied && pane === 'decide' && (
+        {!copied && pane === 'flake' && (
+          <div className="sheet-actions">
+            <div className="conflict" role="alert">
+              {FLAKE_WARNINGS[settings.tone]}
+            </div>
+            <button className="btn btn-flake" type="button" onClick={flake}>
+              Flake anyway ({fmtHours(ask.durationHours)} stays spent)
+            </button>
+            <button className="btn btn-primary" type="button" onClick={() => onClose()}>
+              Keep my word
+            </button>
+          </div>
+        )}
+
+        {!copied && pane === 'decide' && committed && (
+          <div className="sheet-actions">
+            <p className="pane-hint">You said yes to this. It's on your week.</p>
+            <button className="btn" type="button" onClick={() => setPane('flake')}>
+              I need to back out 🥀
+            </button>
+            <button className="btn btn-quiet" type="button" onClick={onClose}>
+              Close
+            </button>
+          </div>
+        )}
+
+        {!copied && pane === 'decide' && !committed && (
           <>
             <div className={`impact ${projected > 100 ? 'impact-over' : ''}`}>
               Saying yes puts this week at <strong>{projected}%</strong> of your budget

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from './db'
-import { percentSpent, spentHours } from './lib/budget'
+import { percentSpent, spentHours, flakedHours } from './lib/budget'
 import { addAskFromText, readSharedText } from './lib/asks'
 import { weatherFor } from './lib/weather'
 import { getSettings } from './db'
@@ -74,12 +74,28 @@ function App() {
     const t = window.setTimeout(() => setStrike(false), 1600)
     return () => window.clearTimeout(t)
   }, [pct, asksRaw])
+
+  // flaking on a commitment also summons the lightning
+  useEffect(() => {
+    let t = 0
+    const onStrike = () => {
+      setStrike(true)
+      window.clearTimeout(t)
+      t = window.setTimeout(() => setStrike(false), 1600)
+    }
+    window.addEventListener('raincheck:strike', onStrike)
+    return () => {
+      window.removeEventListener('raincheck:strike', onStrike)
+      window.clearTimeout(t)
+    }
+  }, [])
   const inbox = asks
     .filter((a) => a.status === 'pending' || a.status === 'deferred')
     .sort((x, y) => x.createdAt.localeCompare(y.createdAt))
   const committed = asks
-    .filter((a) => a.status === 'committed')
+    .filter((a) => a.status === 'committed' || a.status === 'flaked')
     .sort((x, y) => (x.start ?? '').localeCompare(y.start ?? ''))
+  const flaked = flakedHours(asks, now)
   const decidingAsk = deciding === null ? null : asks.find((a) => a.id === deciding) ?? null
 
   return (
@@ -116,7 +132,7 @@ function App() {
           <p className="budget-hint">
             {spent === 0
               ? 'Your week is wide open.'
-              : `${fmtHours(spent)} of ${settings.weeklyBudgetHours}h committed`}
+              : `${fmtHours(spent)} of ${settings.weeklyBudgetHours}h committed${flaked > 0 ? ` (${fmtHours(flaked)} flaked, still counts)` : ''}`}
           </p>
         </div>
       </section>
@@ -181,7 +197,12 @@ function App() {
         <section className="list" aria-label="Committed">
           <h2 className="list-title">Committed</h2>
           {committed.map((ask) => (
-            <button key={ask.id} className="ask-card ask-committed" type="button" onClick={() => setDeciding(ask.id!)}>
+            <button
+              key={ask.id}
+              className={`ask-card ask-committed ${ask.status === 'flaked' ? 'ask-flaked' : ''}`}
+              type="button"
+              onClick={() => setDeciding(ask.id!)}
+            >
               <span className="ask-main">
                 <span className="ask-title">{ask.title}</span>
                 <span className="ask-meta">
@@ -189,7 +210,11 @@ function App() {
                   {fmtWhen(ask.start)} · {fmtHours(ask.durationHours)}
                 </span>
               </span>
-              <span className="status status-yes">yes</span>
+              {ask.status === 'flaked' ? (
+                <span className="status status-flaked">flaked 🥀</span>
+              ) : (
+                <span className="status status-yes">yes</span>
+              )}
             </button>
           ))}
         </section>

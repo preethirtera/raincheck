@@ -21,10 +21,16 @@ export function isThisWeek(iso: string | null, now: Date = new Date()): boolean 
   return t >= weekStart(now).getTime() && t < weekEnd(now).getTime()
 }
 
-/** hours already committed this week */
+/** hours already committed this week — flaked plans still count (the flake tax) */
 export function spentHours(asks: Ask[], now: Date = new Date()): number {
   return asks
-    .filter((a) => a.status === 'committed' && isThisWeek(a.start, now))
+    .filter((a) => (a.status === 'committed' || a.status === 'flaked') && isThisWeek(a.start, now))
+    .reduce((sum, a) => sum + a.durationHours, 0)
+}
+
+export function flakedHours(asks: Ask[], now: Date = new Date()): number {
+  return asks
+    .filter((a) => a.status === 'flaked' && isThisWeek(a.start, now))
     .reduce((sum, a) => sum + a.durationHours, 0)
 }
 

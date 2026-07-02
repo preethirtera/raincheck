@@ -1,6 +1,6 @@
 export type AskSize = 'small' | 'evening' | 'fullday' | 'multiday'
 
-export type AskStatus = 'pending' | 'deferred' | 'committed' | 'declined'
+export type AskStatus = 'pending' | 'deferred' | 'committed' | 'declined' | 'flaked'
 
 export type AskKind = 'ask' | 'alone'
 
