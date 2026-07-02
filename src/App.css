@@ -1,0 +1,130 @@
+.shell {
+  min-height: 100dvh;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.masthead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-display);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.wordmark-neon {
+  color: var(--neon-soft);
+  text-shadow: var(--glow-text);
+}
+
+.tagline {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-lg);
+}
+
+.budget {
+  background: linear-gradient(180deg, var(--ink-1), #0b0412);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.budget-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+
+.budget-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.budget-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--cyan);
+  white-space: nowrap;
+}
+
+.meter {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--ink-2);
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--neon) 55%, var(--amber));
+  box-shadow: var(--glow-neon);
+  transition: width 0.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meter-fill {
+    transition: none;
+  }
+}
+
+.budget-hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.add-ask {
+  border: 1px solid var(--neon);
+  border-radius: var(--radius-md);
+  background: var(--neon);
+  color: #fff;
+  font-weight: 600;
+  font-size: var(--text-base);
+  padding: var(--space-3) var(--space-6);
+  box-shadow: var(--glow-neon);
+}
+
+.add-ask:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.phase-note {
+  margin-top: auto;
+  color: var(--faint);
+  font-size: var(--text-sm);
+}
+
+.phase-chip {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  color: var(--neon-soft);
+  border: 1px solid var(--neon);
+  border-radius: 999px;
+  padding: 2px 10px;
+  margin-right: var(--space-2);
+  white-space: nowrap;
+}
