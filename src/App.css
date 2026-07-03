@@ -977,13 +977,24 @@
   .day {
     grid-template-columns: 52px 1fr;
   }
+  /* let the week glance grow into leftover screen space */
+  .week {
+    flex: 1;
+  }
+  .day {
+    flex: 1;
+    align-items: stretch;
+  }
+  .day-label {
+    align-self: center;
+  }
   .day-track {
-    height: 20px;
+    height: auto;
+    min-height: 26px;
+    max-height: 56px;
   }
   .block {
-    font-size: 9px;
-    top: 2px;
-    bottom: 2px;
+    font-size: 10px;
   }
   .phase-note {
     display: none;
