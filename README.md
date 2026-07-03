@@ -1,6 +1,6 @@
 # RainChecks 🌧
 
-**Live: https://preethirtera.github.io/raincheck/** — on your phone, open it
+**Live: https://rainchecks.app** — on your phone, open it
 in Safari/Chrome and use "Add to Home Screen" to install.
 
 An app for overcommitters. It lives in the gap between **being asked** and

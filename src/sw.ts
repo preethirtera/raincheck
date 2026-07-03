@@ -25,7 +25,7 @@ async function showDueNotifications(): Promise<void> {
     await self.registration.showNotification('RainChecks 🌧', {
       body: 'Something needs your decision.',
       tag: 'raincheck-due',
-      icon: '/raincheck/pwa-192.png',
+      icon: '/pwa-192.png',
     })
     return
   }
@@ -33,7 +33,7 @@ async function showDueNotifications(): Promise<void> {
     await self.registration.showNotification('Time to decide 🌧', {
       body: `${ask.title}${ask.who ? ` w/ ${ask.who}` : ''}. Your calendar awaits your verdict.`,
       tag: `raincheck-${ask.id}`,
-      icon: '/raincheck/pwa-192.png',
+      icon: '/pwa-192.png',
     })
   }
 }
@@ -64,5 +64,5 @@ function readDueAsks(): Promise<StoredAsk[]> {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-  event.waitUntil(self.clients.openWindow('/raincheck/'))
+  event.waitUntil(self.clients.openWindow('/'))
 })

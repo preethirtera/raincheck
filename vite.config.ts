@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  // served from https://preethirtera.github.io/raincheck/
-  base: '/raincheck/',
+  // served from https://rainchecks.app/
+  base: '/',
   plugins: [
     react(),
     VitePWA({
@@ -29,7 +29,7 @@ export default defineConfig({
         display: 'standalone',
         // Android share sheet: share any message straight into the inbox
         share_target: {
-          action: '/raincheck/',
+          action: '/',
           method: 'GET',
           params: { title: 'title', text: 'text', url: 'url' },
         },

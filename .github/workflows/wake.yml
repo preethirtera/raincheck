@@ -1,0 +1,15 @@
+name: Sweep due reminders
+
+# Cloudflare cron triggers fail on this account (API "non-user error"), so
+# GitHub's scheduler pokes the worker's sweep endpoint instead. Remove once
+# the wrangler.jsonc cron deploys cleanly.
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -s -X POST --max-time 30 https://rainchecks.app/api/wake

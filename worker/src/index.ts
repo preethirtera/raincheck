@@ -5,6 +5,7 @@
 
 export interface Env {
   REMINDERS: KVNamespace
+  ASSETS: Fetcher
   VAPID_PUBLIC_KEY: string
   VAPID_PRIVATE_KEY: string
 }
@@ -126,12 +127,14 @@ async function checkDue(env: Env): Promise<{ checked: number; pushed: number }> 
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
-    if (req.method === 'OPTIONS') return new Response(null, { headers: cors(req) })
     const url = new URL(req.url)
+    if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(req)
 
-    if (url.pathname === '/health') return json(req, { ok: true })
+    if (req.method === 'OPTIONS') return new Response(null, { headers: cors(req) })
 
-    if (url.pathname === '/subscribe' && req.method === 'POST') {
+    if (url.pathname === '/api/health') return json(req, { ok: true })
+
+    if (url.pathname === '/api/subscribe' && req.method === 'POST') {
       const body = (await req.json().catch(() => null)) as {
         subscription?: { endpoint?: string }
         dueTimes?: unknown
@@ -145,7 +148,7 @@ export default {
       return json(req, { ok: true })
     }
 
-    if (url.pathname === '/subscribe' && req.method === 'DELETE') {
+    if (url.pathname === '/api/subscribe' && req.method === 'DELETE') {
       const body = (await req.json().catch(() => null)) as { endpoint?: string } | null
       if (!body?.endpoint) return json(req, { error: 'endpoint required' }, 400)
       await env.REMINDERS.delete(await keyFor(body.endpoint))
@@ -153,7 +156,7 @@ export default {
     }
 
     // manual sweep, same logic the cron runs; useful for testing
-    if (url.pathname === '/wake' && req.method === 'POST') {
+    if (url.pathname === '/api/wake' && req.method === 'POST') {
       return json(req, await checkDue(env))
     }
 

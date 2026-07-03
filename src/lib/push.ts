@@ -4,7 +4,8 @@ import { db } from '../db'
    never titles or people. It sends an empty wake-up push; sw.ts builds the
    notification from local data. */
 
-export const WORKER_URL = 'https://raincheck-push.WORKERS_SUBDOMAIN.workers.dev'
+/* same-origin in production; dev talks to the live API */
+export const WORKER_URL = import.meta.env.DEV ? 'https://rainchecks.app' : ''
 const VAPID_PUBLIC_KEY =
   'BPcNJLr_1csIJ3E5-F8Sr4HxDCup6PVqOhOtfYoxwXZEmgNhh5Cem48gqDpPH-VTZtUGvOpezsFycrb05LHnTFw'
 
@@ -39,7 +40,7 @@ export async function enablePush(): Promise<boolean> {
 export async function disablePush(): Promise<void> {
   const sub = await getSubscription()
   if (!sub) return
-  await fetch(`${WORKER_URL}/subscribe`, {
+  await fetch(`${WORKER_URL}/api/subscribe`, {
     method: 'DELETE',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ endpoint: sub.endpoint }),
@@ -55,7 +56,7 @@ export async function syncReminders(): Promise<void> {
   const dueTimes = deferred
     .map((a) => a.decideBy)
     .filter((t): t is string => t !== null && new Date(t).getTime() > Date.now())
-  await fetch(`${WORKER_URL}/subscribe`, {
+  await fetch(`${WORKER_URL}/api/subscribe`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ subscription: sub.toJSON(), dueTimes }),

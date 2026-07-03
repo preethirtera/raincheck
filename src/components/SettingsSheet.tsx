@@ -167,7 +167,7 @@ export function SettingsSheet({ settings, onClose }: { settings: Settings; onClo
         <div className="intake-note">
           <strong>Get asks in without typing:</strong> on Android, share any message to
           RainChecks from the share sheet. On iPhone, make a Shortcut that opens{' '}
-          <code>…/raincheck/#add=</code> plus the selected text. Slack, Teams and email
+          <code>…rainchecks.app/#add=</code> plus the selected text. Slack, Teams and email
           forwarding arrive with the Phase&nbsp;3 backend.
         </div>
 
