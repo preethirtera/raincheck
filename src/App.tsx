@@ -103,7 +103,7 @@ function App() {
       <header className="masthead">
         <div className="masthead-row">
           <h1 className="wordmark">
-            Rain<span className="wordmark-neon">Check</span>
+            Rain<span className="wordmark-neon">Checks</span>
           </h1>
           <button className="gear" type="button" aria-label="Settings" onClick={() => setShowSettings(true)}>
             ⚙

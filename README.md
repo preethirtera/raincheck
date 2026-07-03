@@ -1,4 +1,4 @@
-# RainCheck 🌧
+# RainChecks 🌧
 
 **Live: https://preethirtera.github.io/raincheck/** — on your phone, open it
 in Safari/Chrome and use "Add to Home Screen" to install.

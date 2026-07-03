@@ -35,6 +35,6 @@ export const DECLINES: Record<Tone, string[]> = {
   snarky: [
     'my calendar said no and honestly I fear it more than I fear disappointing you',
     "I've exceeded my weekly yes quota. the system won't let me.",
-    'RainCheck the app has denied this request on my behalf. take it up with the app',
+    'RainChecks the app has denied this request on my behalf. take it up with the app',
   ],
 }

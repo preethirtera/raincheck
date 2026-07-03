@@ -41,7 +41,7 @@ export async function exportJSON(): Promise<string> {
 export async function importJSON(text: string): Promise<number> {
   const data = JSON.parse(text)
   if (data?.raincheck !== 1 || !Array.isArray(data.asks)) {
-    throw new Error('Not a RainCheck backup file')
+    throw new Error('Not a RainChecks backup file')
   }
   await db.transaction('rw', db.asks, db.settings, async () => {
     await db.asks.clear()

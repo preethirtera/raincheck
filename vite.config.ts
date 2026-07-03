@@ -21,8 +21,8 @@ export default defineConfig({
         type: 'module',
       },
       manifest: {
-        name: 'RainCheck',
-        short_name: 'RainCheck',
+        name: 'RainChecks',
+        short_name: 'RainChecks',
         description: 'Pause before you say yes.',
         theme_color: '#060209',
         background_color: '#060209',

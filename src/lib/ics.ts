@@ -13,7 +13,7 @@ export function buildICS(asks: Ask[]): string {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//RainCheck//raincheck//EN',
+    'PRODID:-//RainChecks//raincheck//EN',
     'CALSCALE:GREGORIAN',
   ]
   for (const ask of asks) {

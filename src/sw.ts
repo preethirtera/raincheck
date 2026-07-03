@@ -22,7 +22,7 @@ interface StoredAsk {
 async function showDueNotifications(): Promise<void> {
   const due = await readDueAsks()
   if (due.length === 0) {
-    await self.registration.showNotification('RainCheck 🌧', {
+    await self.registration.showNotification('RainChecks 🌧', {
       body: 'Something needs your decision.',
       tag: 'raincheck-due',
       icon: '/raincheck/pwa-192.png',
